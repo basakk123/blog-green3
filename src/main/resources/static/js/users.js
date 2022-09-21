@@ -12,7 +12,6 @@ $("#btnLogin").click(() => {
 	login();
 });
 
-
 $("#btnDelete").click(() => {
 	resign();
 });
@@ -26,6 +25,31 @@ function join() {
 		alert("유저네임 중복 체크를 진행해주세요");
 		return;
 	}
+
+	if (koreanCheck() == false) {
+		alert("유저네임에 한글이 있으면 안됩니다");
+		return;
+	}
+
+	if (upperCheck() == false) {
+	alert("대문자 하나 이상 꼭 포함해주세요");
+	return;
+	}
+
+	if (passwordSameCheck() == false) {
+		alert("비밀번호가 일치하지 않습니다");
+		return;
+	}
+
+	if (emailCheck() == false) {
+		alert("이메일 형식이 아닙니다");
+		return;
+	}
+
+	//if (blankCheck() == false) {
+	//	alert("공백은 입력 안됩니다");
+	//	return;
+	//}
 
 	let data = {
 		username: $("#username").val(),
@@ -43,6 +67,9 @@ function join() {
 	}).done((res) => {
 		if (res.code == 1) {
 			location.href = "/loginForm";
+		}else{
+			alert(res.msg);
+			history.back();
 		}
 	});
 }
@@ -131,3 +158,65 @@ function update() {
 		}
 	});
 }
+
+function koreanCheck() {
+	let username = $("#username").val();
+	let korRule = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+	if (korRule.test(username)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function upperCheck() {
+	let username = $("#username").val();
+	let upCheck = /(?=.*[A-Z])/;
+	if (upCheck.test(username)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function passwordSameCheck() {
+	let p1 = document.getElementById('password').value;
+	let p2 = document.getElementById('passwordSame').value;
+	if (p1 != p2) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function emailCheck() {
+	let email = $("#email").val();
+	let emailCheck = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+	if (!emailCheck.test(email)) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+//function blankCheck(obj) {
+//	let blankCheck = /\s/;
+//	if (blankCheck.exec(obj.value)) {
+//		obj.focus(); 
+//		return false;
+//}
+//	else {
+//		return true;
+//	}
+//}
+
+//function koreanCheckAll() {
+//	let username = $("#username").val();
+//	let korRule = /^[가-힣]*$/;
+//	if (korRule.test(username)) {
+//		return false;
+//	} else {
+//		return true;
+//	}
+//}
